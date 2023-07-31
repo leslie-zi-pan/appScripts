@@ -1,9 +1,18 @@
-function formatBasketballDescription(inputString) {
+function formatBasketballDescriptionRich(inputString) {
+  console.log(inputString)
+  console.log(inputString.split('\n').map((el) => `"${el}`))
+  
   const regex = /<li>(.*?)<\/li>/g;
   const matches = inputString?.match(regex);
   if (!matches) return {};
   const resultList = matches.map((match) => match?.replace(/<\li>/g, '"').replace(', ', '": ').replace(/<\/li>/g, ''));
   const result = `{${resultList.join(', ')}}`;
+  return JSON.parse(result);
+}
+
+function formatBasketballDescription(inputString) {
+  const result = `{${inputString.split('\n').map((el) => `"${el}`.replace(', ', '": ')).join(', ')}}`;
+  console.log(result);
   return JSON.parse(result);
 }
 
@@ -18,19 +27,6 @@ const basketballDescriptionMappers = (inputString) => {
   return mapper[inputString] ?? 'Undefined Header';
 }
 
-function parseXml(inputString) {
-  let document = XmlService.parse(inputString);
-  let root = document.getRootElement();
-
-  let channel = root.getChild('channel');
-  let items = channel.getChildren('item');
-  items.forEach(item => {
-    let title = item.getChild('title').getText();
-    let categories = item.getChildren('category');
-    let labels = categories.map(category => category.getText());
-    console.log('%s (%s)', title, labels.join(', '));
-  });
-}
 
 function syncBasketballWorkouts() {
   const ss = SpreadsheetApp.openById('1jC8zd6rWU2ip-x51Ebfkq2dQrR2hdZ6XH0p-YJMpagM');
