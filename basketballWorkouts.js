@@ -1,4 +1,4 @@
-function convertToList(inputString) {
+function formatBasketballDescription(inputString) {
   const regex = /<li>(.*?)<\/li>/g;
   const matches = inputString?.match(regex);
   if (!matches) return {};
@@ -7,7 +7,7 @@ function convertToList(inputString) {
   return JSON.parse(result);
 }
 
-const descriptionMappers = (inputString) => {
+const basketballDescriptionMappers = (inputString) => {
   const mapper = {
     fta: 'Free throws attempted',
     ftm: 'Free throws made',
@@ -32,7 +32,7 @@ function parseXml(inputString) {
   });
 }
 
-function importGoogleCalendar() {
+function syncBasketballWorkouts() {
   const ss = SpreadsheetApp.openById('1jC8zd6rWU2ip-x51Ebfkq2dQrR2hdZ6XH0p-YJMpagM');
   const sheet = ss.getSheetByName('basketball_import_raw');
   var calendarId = sheet.getRange('B1').getValue().toString();
@@ -59,7 +59,7 @@ function importGoogleCalendar() {
   for (var i = 0; i < events.length; i++) {
     var row = i + 7;
 
-    const description = convertToList(events[i].getDescription());
+    const description = formatBasketballDescription(events[i].getDescription());
 
     var details = [[
       events[i].getTitle(), 
